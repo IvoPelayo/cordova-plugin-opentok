@@ -20,6 +20,7 @@ The Session object returned by the `OT.initSession()` method provides access to 
 [subscribe()](#subscribe)  
 [unpublish()](#unpublish)  
 [unsubscribe()](#unsubscribe)  
+[signal()](#signal)  
 
 
 <a name="on"></a>
@@ -161,6 +162,42 @@ Example Code:
 session.unsubscribe(subscriber);
 ```
 
+<a name="signal"></a>
+### signal(type:String, data:String)
+
+Sends text and data between clients connected to an OpenTok session.
+
+These messages allow developers to build basic text chat, send instructions from one client to another, and create other valuable experiences.
+#### Parameters
+
+* **type** (String) — This string identifying the type of the signal. 
+
+* **data** (String) - Information sended with the signal. 
+
+Note: each signal type will fire a 'signal:\[type\]' event. You must add a single listener for each type. 
+
+Example Code:  
+```
+session.signal('message','this is a text message');
+session.on('signal:message', (event) => {
+ 	if (event.from.connectionId != session.connection.connectionId) {
+	 	console.log(event.data);
+	}
+});
+
+```
+Example With data:  
+```
+session.signal('data-message',JSON.stringify({message:'this message has data',data:{name:'dave',date:'12-01-01'}}));
+
+session.on('signal:data-message', (event) => {
+ 	if (event.from.connectionId != that.session.connection.connectionId) {
+                            
+        let data = event.data?JSON.parse(event.data):null;
+        console.log(data);
+    }
+});
+```
 <a name="events"></a>
 ## Session Events:
 
